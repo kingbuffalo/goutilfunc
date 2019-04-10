@@ -2,6 +2,7 @@ package goutilfunc
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/kingbuffalo/seelog"
 	"math/rand"
 	"runtime"
@@ -27,7 +28,7 @@ func init() {
 	}
 }
 
-func PanicJsonUnmarshalError(b []byte, err error) {
+func PanicJsonUnmarshalError(b []byte, err error) error {
 	se, ok := err.(*json.SyntaxError)
 	if ok {
 		if se != nil {
@@ -40,11 +41,11 @@ func PanicJsonUnmarshalError(b []byte, err error) {
 				e = int64(len(b))
 			}
 			errMsg := string(b[s:e])
-			panic(errMsg)
+			return errors.New(errMsg)
 		}
 	} else {
-		panic(err)
 	}
+	return err
 }
 
 func RecoverPanic() {
